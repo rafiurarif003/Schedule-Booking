@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Care AC Servicing Schedule Book</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans min-h-screen flex flex-col justify-between">
+
+    <header class="bg-emerald-700 text-white py-12 px-4 text-center shadow-lg">
+        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tighter leading-tight">
+            Care AC Servicing
+        </h1>
+        <p class="text-xl md:text-2xl font-light text-emerald-100 mt-1">
+            Service Booking Portal
+        </p>
+        <div class="w-20 h-1 bg-white mx-auto mt-5 rounded-full opacity-60"></div>
+    </header>
+
+    <main class="max-w-2xl w-full mx-auto px-4 py-10 flex-grow">
+        <div class="bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-slate-100">
+            <h2 class="text-2xl font-semibold text-slate-800 mb-8 flex items-center gap-3">
+                <span class="text-emerald-600 text-3xl">📅</span> Provide Your Booking Details
+            </h2>
+
+            <form action="https://formspree.io/f/YOUR_ENDPOINT_HERE" method="POST" class="space-y-6">
+                
+                <div>
+                    <label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">Your Name</label>
+                    <input type="text" id="name" name="customer_name" required
+                        class="w-full px-5 py-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+                        placeholder="John Doe">
+                </div>
+
+                <div>
+                    <label for="contact" class="block text-sm font-medium text-slate-700 mb-1.5">Contact</label>
+                    <input type="tel" id="contact" name="customer_contact" required
+                        class="w-full px-5 py-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+                        placeholder="Phone number or Email">
+                </div>
+
+                <div>
+                    <label for="address" class="block text-sm font-medium text-slate-700 mb-1.5">Address</label>
+                    <textarea id="address" name="customer_address" rows="3" required
+                        class="w-full px-5 py-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none resize-none"
+                        placeholder="Your full address where servicing is required..."></textarea>
+                </div>
+
+                <div>
+                    <label for="date" class="block text-sm font-medium text-slate-700 mb-1.5">Schedule Date</label>
+                    <input type="date" id="date" name="schedule_date" required
+                        class="w-full px-5 py-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none text-slate-700">
+                </div>
+
+                <div>
+                    <label for="problem" class="block text-sm font-medium text-slate-700 mb-1.5">Problem</label>
+                    <textarea id="problem" name="ac_problem_description" rows="4" required
+                        class="w-full px-5 py-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none resize-none"
+                        placeholder="Describe the issue (e.g., AC not cooling, making noise)..."></textarea>
+                </div>
+
+                <div>
+                    <label for="other_details" class="block text-sm font-medium text-slate-700 mb-1.5">Other Details</label>
+                    <textarea id="other_details" name="additional_info" rows="2"
+                        class="w-full px-5 py-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none resize-none"
+                        placeholder="Any extra instructions, preferred timing, or unit model..."></textarea>
+                </div>
+
+                <button type="submit" 
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-lg py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 mt-4 focus:outline-none focus:ring-4 focus:ring-emerald-300">
+                    Confirm & Book Appointment
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="text-center py-5 text-sm text-emerald-900 bg-emerald-50 border-t border-emerald-100">
+        &copy; 2026 Care AC
