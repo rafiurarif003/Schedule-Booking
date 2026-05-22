@@ -29,7 +29,7 @@
                 <span class="text-emerald-600 text-3xl">📅</span> Provide Your Booking Details
             </h2>
 
-            <form id="bookingForm" action="https://formspree.io/f/mqejbzwr" method="POST" class="space-y-6">
+            <form id="bookingForm" class="space-y-6">
                 
                 <div>
                     <label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">Your Name</label>
@@ -111,37 +111,73 @@
         const submitBtn = document.getElementById('submitBtn');
         const refNumber = document.getElementById('refNumber');
 
-        form.addEventListener('submit', function(e) {
+        // Google Apps Script URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqCpXTq3_PZ70E0-LqXb8m8mG5hzCtfbsUvQawEOTLV3eMQA6ot-7AK6zJ6dy96VBihg/exec';
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
             // Show loading state
             submitBtn.disabled = true;
             submitBtn.textContent = 'Processing...';
             submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        });
 
-        // Listen for FormSpree redirect
-        // FormSpree redirects to a success page, so we generate the confirmation before that
-        form.addEventListener('submit', function(e) {
-            // Generate booking reference
-            const bookingRef = 'CARE-' + Date.now();
-            refNumber.textContent = bookingRef;
+            // Get form data
+            const formData = new FormData(form);
+            const data = {
+                timestamp: new Date().toLocaleString(),
+                customer_name: formData.get('customer_name'),
+                customer_contact: formData.get('customer_contact'),
+                customer_address: formData.get('customer_address'),
+                schedule_date: formData.get('schedule_date'),
+                ac_problem_description: formData.get('ac_problem_description'),
+                additional_info: formData.get('additional_info')
+            };
 
-            // Store in localStorage for display after redirect
-            localStorage.setItem('lastBookingRef', bookingRef);
-        });
+            try {
+                // Send to Google Sheet
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data)
+                });
 
-        // Check if returning from FormSpree success
-        window.addEventListener('load', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const isSuccess = urlParams.get('success') === 'true' || 
-                            window.location.hash.includes('success');
-            
-            // If redirected back from FormSpree or just submitted
-            const lastBookingRef = localStorage.getItem('lastBookingRef');
-            if (lastBookingRef) {
-                refNumber.textContent = lastBookingRef;
+                // Send to FormSpree for email notification
+                const formspreeData = new FormData();
+                formspreeData.append('customer_name', data.customer_name);
+                formspreeData.append('customer_contact', data.customer_contact);
+                formspreeData.append('customer_address', data.customer_address);
+                formspreeData.append('schedule_date', data.schedule_date);
+                formspreeData.append('ac_problem_description', data.ac_problem_description);
+                formspreeData.append('additional_info', data.additional_info);
+
+                await fetch('https://formspree.io/f/mqejbzwr', {
+                    method: 'POST',
+                    body: formspreeData
+                });
+
+                // Generate booking reference
+                const bookingRef = 'CARE-' + Date.now();
+                refNumber.textContent = bookingRef;
+
+                // Show success message
                 formContainer.classList.add('hidden');
                 successMessage.classList.remove('hidden');
-                localStorage.removeItem('lastBookingRef');
+
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Confirm & Book Appointment';
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Booking submitted! We will contact you shortly.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Confirm & Book Appointment';
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         });
     </script>
